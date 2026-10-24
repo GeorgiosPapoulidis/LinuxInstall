@@ -116,6 +116,8 @@ hyprlock \
 hypridle \
 hyprpicker \
 hyprsunset \
+hyprshot \
+hyprcursor \
 hyprpolkitagent \
 qt5-wayland \
 qt6-wayland \
@@ -137,7 +139,8 @@ xdg-desktop-portal-hyprland \
 xdg-desktop-portal-gtk \
 grim \
 slurp \
-flameshot \
+satty \
+wayfreeze \
 obs-studio \
 wl-clipboard \
 cliphist \
@@ -174,6 +177,7 @@ ffmpeg \
 vlc \
 vlc-plugins-all \
 libdvdcss \
+amberol \
 gst-plugins-good \
 gst-plugins-bad \
 gst-plugins-ugly \
@@ -233,6 +237,7 @@ coolercontrol-bin \
 mkinitcpio-sd-numlock \
 vscodium-bin \
 rustdesk-bin \
+grayjay-bin \
 betterdiscordctl
 
 flatpak install -y flathub \
