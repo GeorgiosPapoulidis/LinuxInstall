@@ -591,7 +591,7 @@ if ! grep -q "exec Hyprland" ~/.bash_profile 2>/dev/null; then
     cat << 'EOF' >> ~/.bash_profile
 
 if [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" && "${XDG_VTNR:-0}" -eq 1 ]]; then
-    exec Hyprland
+    exec start-hyprland
 fi
 EOF
 fi
