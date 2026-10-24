@@ -77,6 +77,7 @@ cups \
 hplip \
 brightnessctl \
 network-manager-applet \
+udiskie \
 xdg-user-dirs \
 man-db \
 man-pages \
@@ -109,14 +110,11 @@ npm \
 ripgrep \
 fd \
 neovim \
-tmux \
 hyprland \
 hyprpaper \
 hyprlock \
 hypridle \
 hyprpicker \
-hyprsunset \
-hyprshot \
 hyprcursor \
 hyprpolkitagent \
 qt5-wayland \
@@ -140,7 +138,6 @@ xdg-desktop-portal-gtk \
 grim \
 slurp \
 satty \
-wayfreeze \
 obs-studio \
 wl-clipboard \
 cliphist \
@@ -223,6 +220,9 @@ android-tools \
 shfmt
 
 yay -S --needed --noconfirm \
+hyprshot \
+hyprsunset \
+wayfreeze-git \
 lib32-giflib \
 openrazer-meta \
 droidcam \
@@ -254,7 +254,7 @@ us.zoom.Zoom
 
 # ==============================================================================
 # 5. Enabling services and setting user groups
-# ==============================================================================
+# ============================================================================== 
 
 sudo tee /etc/xdg/reflector/reflector.conf << 'EOF'
 --save /etc/pacman.d/mirrorlist
@@ -318,22 +318,23 @@ sudo systemctl enable --now docker.service
 sudo systemctl enable --now swayosd-libinput-backend.service
 systemctl --user enable openrazer-daemon.service
 
+# ==============================================================================
+# 6. Setting colors in the terminal
+# ============================================================================== 
+
 sudo chown -R "$USERNAME:$USERNAME" /opt/flutter
 cat << 'EOF' >> ~/.bashrc
 
 export PATH="$PATH:/opt/flutter/bin:/opt/flutter/bin/cache/dart-sdk/bin"
 EOF
 
-sudo usermod -aG libvirt,kvm,docker,wireshark,openrazer "$USERNAME"
+sudo usermod -aG libvirt,kvm,docker,wireshark,openrazer,gamemode "$USERNAME"
 
 sudo useradd -m -s /bin/bash -G docker "$SERVER_USERNAME"
 sudo loginctl enable-linger "$SERVER_USERNAME"
 
 xdg-user-dirs-update
 sudo pkgfile --update
-
-sudo btrfs quota enable /
-sudo btrfs quota enable /home
 
 sudo tee /etc/modprobe.d/nvidia-power-management.conf << 'EOF'
 options nvidia NVreg_PreserveVideoMemoryAllocations=1
@@ -350,10 +351,6 @@ sudo sed -i 's/^MODULES=(nvme)/MODULES=(nvme nvidia nvidia_modeset nvidia_uvm nv
 sudo sed -i 's/keyboard sd-vconsole/keyboard sd-numlock sd-vconsole/' /etc/mkinitcpio.conf
 
 sudo mkinitcpio -P
-
-# ==============================================================================
-# 6. Setting colors in the terminal
-# ==============================================================================
 
 cat << 'EOF' >> ~/.bashrc
 
