@@ -6,7 +6,7 @@ source "Config.env"
 # Boot from the new system and continue with the rest of the commands
 # ==============================================================================
 # 4. Configuring package managers and downloading packages
-# ==============================================================================
+# ============================================================================== 
 
 cat << UpdateConfigFile >> Config.env
 
@@ -48,6 +48,9 @@ tmux \
 flatpak \
 egl-wayland \
 openbsd-netcat \
+socat \
+jq \
+mpv \
 vulkan-icd-loader \
 lib32-vulkan-icd-loader \
 libva-utils \
@@ -220,6 +223,8 @@ android-tools \
 shfmt
 
 yay -S --needed --noconfirm \
+mpvpaper \
+wallust \
 hyprshot \
 hyprsunset \
 wayfreeze-git \
@@ -252,10 +257,6 @@ org.signal.Signal \
 com.viber.Viber \
 us.zoom.Zoom
 
-# ==============================================================================
-# 5. Enabling services and setting user groups
-# ============================================================================== 
-
 sudo tee /etc/xdg/reflector/reflector.conf << 'EOF'
 --save /etc/pacman.d/mirrorlist
 --protocol https
@@ -277,6 +278,13 @@ size=1920x1080
 fps=60
 EOF
 chown "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.config/droidcam"
+
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+sudo tee /etc/systemd/system/getty@tty1.service.d/autologin.conf >/dev/null << EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin ${USERNAME} %I \$TERM
+EOF
 
 sudo mkdir -p /etc/systemd/system/paccache.service.d
 sudo tee /etc/systemd/system/paccache.service.d/override.conf << 'EOF'
@@ -335,6 +343,10 @@ sudo loginctl enable-linger "$SERVER_USERNAME"
 
 xdg-user-dirs-update
 sudo pkgfile --update
+
+# ==============================================================================
+# 5. Enabling services and setting user groups
+# ============================================================================== 
 
 sudo tee /etc/modprobe.d/nvidia-power-management.conf << 'EOF'
 options nvidia NVreg_PreserveVideoMemoryAllocations=1
