@@ -553,8 +553,15 @@ input {
     kb_layout = us,gr
     kb_options = grp:alt_shift_toggle
     numlock_by_default = true
-    follow_mouse = 1
+    follow_mouse = 0
+    float_switch_override_focus = 0
     sensitivity = 0
+}
+
+cursor {
+    no_warps = false
+    persistent_warps = false
+    warp_on_change_workspace = 1
 }
 
 general {
@@ -610,6 +617,7 @@ misc {
     disable_hyprland_logo = true
     disable_splash_rendering = true
     force_default_wallpaper = 0
+    mouse_move_focuses_monitor = false
 }
 
 windowrule = immediate on, match:class ^(steam_app_.*)$
