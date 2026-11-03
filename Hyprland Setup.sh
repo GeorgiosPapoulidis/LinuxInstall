@@ -10,6 +10,37 @@ mkdir -p ~/Pictures/{Wallpapers,Screenshots}
 mkdir -p ~/Videos/"Desktop Backgrounds"
 mkdir -p ~/.cache/wallpaper-videos
 
+WALL_DIR="$HOME/Videos/Desktop Backgrounds"
+RELEASE_TAG="v0.0.1"
+API_URL="https://api.github.com/repos/GeorgiosPapoulidis/LinuxInstall/releases/tags/${RELEASE_TAG}"
+
+echo "Checking release assets for ${RELEASE_TAG}..."
+
+if command -v jq >/dev/null 2>&1; then
+    assets_json=$(curl -fsSL "$API_URL" | jq -r '.assets[] | "\(.name)\t\(.browser_download_url)"' 2>/dev/null || true)
+else
+    assets_json=$(curl -fsSL "$API_URL" | grep -E '"name"|"browser_download_url"' | paste - - | sed -E 's/.*"name": *"([^"]+)".*"browser_download_url": *"([^"]+)".*/\1\t\2/' || true)
+fi
+
+if [[ -n "$assets_json" ]]; then
+    while IFS=$'\t' read -r asset_name download_url; do
+        [[ -z "$asset_name" || -z "$download_url" ]] && continue
+        target_file="${WALL_DIR}/${asset_name}"
+
+        if [[ ! -f "$target_file" ]]; then
+            echo "Missing: ${asset_name} -> Downloading..."
+            curl -fL --progress-bar --retry 3 -o "$target_file" "$download_url" || {
+                echo "Warning: Failed to download ${asset_name}"
+                rm -f "$target_file"
+            }
+        else
+            echo "Already present: ${asset_name}"
+        fi
+    done <<< "$assets_json"
+else
+    echo "Notice: Could not query release assets (offline or release has no assets)."
+fi
+
 magick -size 1920x1080 gradient:'#1e1e2e-#11111b' ~/.cache/current_wallpaper.png 2>/dev/null || \
     cp /usr/share/hypr/wall0.png ~/.cache/current_wallpaper.png 2>/dev/null || true
 
